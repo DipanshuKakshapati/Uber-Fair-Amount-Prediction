@@ -4,7 +4,7 @@ import pickle
 import time
 
 # Load your trained model
-model_data = pickle.load(open('employee_performance_prediction_model.pkl', 'rb'))
+model_data = pickle.load(open('uber_fare_amount_prediction.pkl', 'rb'))
 model = model_data['model']
 model_accuracy = model_data['accuracy']
 # Assuming 'logo.png' is the path to your logo image file
@@ -13,148 +13,132 @@ st.sidebar.image('logo.png', use_column_width=True)
 # Add formatted text below the logo in the sidebar
 st.sidebar.markdown("""
     **About the Company**  
-    *Teach for India* is a fellowship program for young professionals who want to solve the education crisis in the country. It is reported that the TFI alumni community is responsible for starting 150+ organisations in the field of social impact.
+    Ride-sharing services like Uber have revolutionized transportation by providing convenient and affordable rides. As a data scientist, your task is to predict the fare amount of future rides using regression analysis. By accurately estimating the fare amount, ride-sharing companies can optimize pricing strategies, provide transparency to riders, and ensure fair compensation for drivers.
 
     **Bridging the gap**  
-    *Teach for India* has approximately 900+ fellows who are deployed across 7 cities and are working with 28000 students. Many of these students do not have the reading and numeracy skills required at their grade level. The ability to predict employee performance will enable TFI to implement learning and development measures to empower their fellows to improve the reading levels of their students.
+    The fare amount of a ride is influenced by various factors such as distance, duration, traffic conditions, time of day, and demand. Your goal is to develop a regression model that can predict the fare amount based on these factors. You will work with a dataset that includes historical ride data, including the fare amount and relevant features.
 """, unsafe_allow_html=True)
 
-st.title('Employee Performance Prediction Form')
+st.title('Predict the Fare Amount of Future Rides')
 
 st.image('logo.png')
 
 st.write("""
-This is a Python created an HR analytics tool that can help a talent management team in Teach For India predict employee performance and plan for their growth.
+This is a regression model to predict the fare amount of future rides.
 """)
          
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Department
+### Pickup longitude
 """)
 # Replace selectbox with st.radio
-department = st.selectbox('Select your department', ['Sales & Marketing', 'Operations', 'Procurement', 'Technology', 'Analytics', 'Finance', 'HR', 'R&D', 'Legal'])
+pickup_longitude = st.number_input('Pickup longitude')
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Education
+### Pickup latitude 
 """)
 # Rest of your st.radio widgets replacing selectbox...
-education = st.selectbox('Select your education status', ["Bachelor's", "Master's & above", "Below Secondary", "Others"])
+pickup_latitude = st.number_input('Pickup latitude')
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Gender
+### Dropoff longitude
 """)
-gender = st.radio('Gender', ['Male', 'Female'])
+dropoff_longitude = st.number_input('Dropoff longitude')
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Recruitment Channel
+### Dropoff latitude
 """)
-recruitment_channel = st.selectbox('Select your recruitment channel', ['Other', 'Sourcing', 'Referred'])
+dropoff_latitude = st.number_input('Dropoff latitude')
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Awards Won
-0 means have not received an award. 1 means have received an award.
+### Passenger count
 """)
-awards_won = st.radio('Awards Won', [0, 1])
+passenger_count = st.slider('Number of passengers', 1, 8, 1)
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Number of Trainigs
+### Pickup year
 """)
-no_of_trainings = st.slider('Number of Trainings', 1, 5, 1)
+pickup_year = st.selectbox('Select your department', ['2009','2010','2011','2012','2013','2014','2015'])
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Region
+### Pickup month 
 """)
-region_options = [f'region_{i}' for i in range(1, 35)]
-region = st.selectbox('Region', options=region_options)
+pickup_month  = st.selectbox('Select your department', ['January','February','March','April','May','June','July', 'August','September','October','November','December'])
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Age
+### Pickup weekday 
 """)
-age = st.slider('Age', 20, 60, 20)
+pickup_weekday  = st.selectbox('Select your department', ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'])
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Previous year rating 
-Rating is between 1 and 5. 1 meaning low, 5 meaning high.
+### Pickup hour
+0 is 12 AM. 23 is 11 PM
 """)
-previous_year_rating = st.slider('Previous Year Rating', 1, 5, 1)
+pickup_hour = st.slider('Previous Year Rating', 0, 23, 1)
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 st.write("""
-### Length of Service
-Time period is in years.
+### Distance km 
+Distance is in km.
 """)
-length_of_service = st.slider('Length of Service', 1, 32, 1)
-
-# Add an empty Markdown to create more space
-st.markdown('<br>', unsafe_allow_html=True)
-
-st.write("""
-### Average Training Score
-Training score is between 1 and 100. 1 meaning low, 100 meaning high.
-""")
-avg_training_score = st.slider('Average Training Score', 1, 100, 1)
+distance_km  = st.number_input('Distance in km')
 
 # Add an empty Markdown to create more space
 st.markdown('<br>', unsafe_allow_html=True)
 
 # Processing the prediction when the user changes any input
 input_data = {
-    'no_of_trainings': [no_of_trainings],
-    'age': [age],
-    'previous_year_rating': [previous_year_rating],
-    'length_of_service': [length_of_service],
-    'awards_won': [awards_won],
-    'avg_training_score': [avg_training_score],
-    'department': [department],
-    'region': [region],
-    'education': [education],
-    'gender': [gender],
-    'recruitment_channel': [recruitment_channel]
+    'pickup_longitude': [pickup_longitude],
+    'pickup_latitude': [pickup_latitude],
+    'dropoff_longitude': [dropoff_longitude],
+    'dropoff_latitude': [dropoff_latitude],
+    'passenger_count': [passenger_count],
+    'pickup_year': [pickup_year],
+    'pickup_month': [pickup_month],
+    'pickup_weekday': [pickup_weekday],
+    'pickup_hour': [pickup_hour],
+    'distance_km': [distance_km]
 }
 
 input_df = pd.DataFrame.from_dict(input_data)
 
 # Display button and make prediction
-if st.button('Predict Performance'):
+if st.button('Predict Fare Amount'):
     # Show a loading animation using an animated GIF
     with st.spinner('Predicting...'):
         # Simulate a time-consuming task
         time.sleep(2)
         prediction = model.predict(input_df)
     
-    # After prediction, display the result with a color theme
-    output = 'High Performance' if prediction[0] == 1 else 'Low Performance'
-    if output == 'High Performance':
-        st.markdown(f"<h1 style='color:green;'>{output}</h1>", unsafe_allow_html=True)
-        st.write(f'Model Accuracy: {model_accuracy*100:.2f}%')
-    else:
-        st.markdown(f"<h1 style='color:red;'>{output}</h1>", unsafe_allow_html=True)
-        st.write(f'Model Accuracy: {model_accuracy*100:.2f}%')
+    st.markdown(f"Fare Amount: ${prediction[0]:.2f}")
+    st.write(f'Model Accuracy: {model_accuracy*100:.2f}%')
+
+    st.balloons()
